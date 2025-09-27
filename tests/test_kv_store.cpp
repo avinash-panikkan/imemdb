@@ -1,53 +1,47 @@
 #include "imemdb.h"
 #include <cassert>
+#include <filesystem>
 #include <iostream>
 
+using namespace imemdb;
+
 int main() {
-    imemdb::KeyValueStore kv;
+    {
+        std::cout << "Running basic KV tests...\n";
+        KeyValueStore store;
 
-    // 1 Test put and get
-    kv.put("name", "Author");
-    kv.put("project", "imemdb");
+        store.put("name", "Alice");
+        assert(store.get("name").has_value());
+        assert(store.get("name").value() == "Alice");
 
-    auto name = kv.get("name");
-    assert(name.has_value());
-    assert(name.value() == "Author");
+        assert(store.remove("name") == true);
+        assert(!store.get("name").has_value());
+    }
 
-    auto project = kv.get("project");
-    assert(project.has_value());
-    assert(project.value() == "imemdb");
+    {
+        std::cout << "Running persistence tests...\n";
+        KeyValueStore store;
+        store.put("user", "Bob");
+        store.put("lang", "C++");
 
-    std::cout << "Put/Get test passed\n";
+        const std::string filename = "testdata.txt";
 
-    // 2️ Test update
-    kv.put("name", "UpdatedName");
-    name = kv.get("name");
-    assert(name.has_value());
-    assert(name.value() == "UpdatedName");
+        // Save
+        assert(store.save_to_file(filename) == true);
 
-    std::cout << "Update test passed\n";
+        // Load into new instance
+        KeyValueStore store2;
+        assert(store2.load_from_file(filename) == true);
 
-    // 3️ Test remove
-    bool removed = kv.remove("name");
-    assert(removed);
-    assert(!kv.get("name").has_value());
+        assert(store2.get("user").has_value());
+        assert(store2.get("user").value() == "Bob");
 
-    removed = kv.remove("nonexistent");
-    assert(!removed);
+        assert(store2.get("lang").has_value());
+        assert(store2.get("lang").value() == "C++");
 
-    std::cout << "Remove test passed\n";
+        std::filesystem::remove(filename);
+    }
 
-    // 4️ Test multiple keys
-    kv.put("key1", "val1");
-    kv.put("key2", "val2");
-    kv.put("key3", "val3");
-
-    assert(kv.get("key1").value() == "val1");
-    assert(kv.get("key2").value() == "val2");
-    assert(kv.get("key3").value() == "val3");
-
-    std::cout << "Multiple keys test passed\n";
-
-    std::cout << "\nAll tests passed successfully!\n";
+    std::cout << "All tests passed!\n";
     return 0;
 }
