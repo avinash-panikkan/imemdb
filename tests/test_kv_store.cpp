@@ -1,4 +1,4 @@
-#include "imemdb.h"
+#include "imemdb/kv_store.h"
 #include <cassert>
 #include <filesystem>
 #include <iostream>
@@ -6,42 +6,40 @@
 using namespace imemdb;
 
 int main() {
+    const std::string wal_file = "wal_test.txt";
+    const std::string snapshot_file = "snapshot_test.txt";
+    std::filesystem::remove(wal_file);
+    std::filesystem::remove(snapshot_file);
+
+    // ---- WAL TEST ----
     {
-        std::cout << "Running basic KV tests...\n";
-        KeyValueStore store;
+        KeyValueStore kv(wal_file);
+        kv.put("x", "100");
+        kv.put("y", "200");
+        kv.remove("y");
 
-        store.put("name", "Alice");
-        assert(store.get("name").has_value());
-        assert(store.get("name").value() == "Alice");
-
-        assert(store.remove("name") == true);
-        assert(!store.get("name").has_value());
+        KeyValueStore kv2(wal_file); // load from WAL
+        assert(kv2.get("x").value() == "100");
+        assert(!kv2.get("y").has_value());
     }
 
+    // ---- SNAPSHOT TEST ----
     {
-        std::cout << "Running persistence tests...\n";
-        KeyValueStore store;
-        store.put("user", "Bob");
-        store.put("lang", "C++");
+        KeyValueStore kv;
+        kv.put("a", "foo");
+        kv.put("b", "bar");
 
-        const std::string filename = "testdata.txt";
+        assert(kv.save_to_file(snapshot_file));
 
-        // Save
-        assert(store.save_to_file(filename) == true);
-
-        // Load into new instance
-        KeyValueStore store2;
-        assert(store2.load_from_file(filename) == true);
-
-        assert(store2.get("user").has_value());
-        assert(store2.get("user").value() == "Bob");
-
-        assert(store2.get("lang").has_value());
-        assert(store2.get("lang").value() == "C++");
-
-        std::filesystem::remove(filename);
+        KeyValueStore kv2;
+        kv2.load_from_file(snapshot_file); // load from snapshot
+        assert(kv2.get("a").value() == "foo");
+        assert(kv2.get("b").value() == "bar");
     }
 
-    std::cout << "All tests passed!\n";
+    std::filesystem::remove(wal_file);
+    std::filesystem::remove(snapshot_file);
+
+    std::cout << "WAL + Snapshot tests passed!\n";
     return 0;
 }
