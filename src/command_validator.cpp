@@ -1,6 +1,7 @@
 #include "imemdb/command_validator.h"
 
 const std::unordered_map<std::string, int> CommandValidator::expectedArgs_ = {
+    {"help", 0},
     {"put", 2},
     {"get", 1},
     {"remove", 1},

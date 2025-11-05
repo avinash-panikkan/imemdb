@@ -5,7 +5,7 @@
 #include <functional>
 #include <vector>
 #include <string>
-#include "imemdb/command_parser.h"
+#include "command.h"
 
 class CommandDispatcher
 {

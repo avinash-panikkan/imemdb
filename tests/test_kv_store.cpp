@@ -3,8 +3,6 @@
 #include <filesystem>
 #include <iostream>
 
-using namespace imemdb;
-
 int main() {
     const std::string wal_file = "wal_test.txt";
     const std::string snapshot_file = "snapshot_test.txt";

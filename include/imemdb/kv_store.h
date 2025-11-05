@@ -6,8 +6,6 @@
 #include <unordered_map>
 #include <shared_mutex>
 
-namespace imemdb {
-
 class KeyValueStore
 {
 public:
@@ -32,7 +30,5 @@ private:
     std::unordered_map<std::string, std::string> m_store;
     std::string m_wal_filename;
 };
-
-} // namespace imemdb
 
 #endif // IMEMDB_KV_STORE_H

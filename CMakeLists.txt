@@ -35,6 +35,7 @@ set(IMEMDB_SOURCES
 set(IMEMDB_HEADERS
     include/imemdb.h
     include/imemdb/kv_store.h
+    include/imemdb/command.h
     include/imemdb/command_parser.h
     include/imemdb/command_validator.h
     include/imemdb/command_dispatcher.h

@@ -5,15 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <algorithm>
-
-struct Command {
-    std::string strCmdName_;
-    std::vector<std::string> args_;
-
-    Command() = default;
-    Command(std::string strCmdName, std::vector<std::string> args)
-        : strCmdName_(std::move(strCmdName)), args_(std::move(args)) {};
-};
+#include "command.h"
 
 class CommandParser
 {

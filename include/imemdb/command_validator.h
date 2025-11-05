@@ -3,7 +3,7 @@
 
 #include <string>
 #include <unordered_map>
-#include "command_parser.h"
+#include "command.h"
 
 class CommandValidator
 {
