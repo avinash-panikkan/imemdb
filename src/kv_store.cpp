@@ -3,8 +3,6 @@
 #include <sstream>
 #include <iostream>
 
-namespace imemdb {
-
 KeyValueStore::KeyValueStore(const std::string &wal_filename)
     : m_wal_filename(wal_filename)
 {
@@ -82,12 +80,12 @@ bool KeyValueStore::load_from_file(const std::string &filename)
         if (!std::getline(iss, first, '\t'))
             continue; 
 
-        if (first == "PUT")
+        if (first == "put")
         {
             if (std::getline(iss, key, '\t') && (std::getline(iss, value)))
                 m_store[key] = value;
         }
-        else if (first == "REMOVE")
+        else if (first == "remove")
         {
             if (std::getline(iss, key))
                 m_store.erase(key);
@@ -117,5 +115,3 @@ void KeyValueStore::append_wal(const std::string &entry)
 
     ofs << entry << "\n"; 
 }
-
-} // namespace imemdb

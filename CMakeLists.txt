@@ -27,12 +27,18 @@ option(IMEMDB_BUILD_TESTS "Build tests" ON)
 # ----------------------
 set(IMEMDB_SOURCES
     src/kv_store.cpp
-    src/main.cpp
+    src/cli.cpp
+    src/command_validator.cpp
+    src/command_dispatcher.cpp
 )
 
 set(IMEMDB_HEADERS
     include/imemdb.h
     include/imemdb/kv_store.h
+    include/imemdb/command.h
+    include/imemdb/command_parser.h
+    include/imemdb/command_validator.h
+    include/imemdb/command_dispatcher.h
 )
 
 # ----------------------
