@@ -10,7 +10,7 @@ void register_commands(CommandDispatcher& dispatcher, KeyValueStore& kv_store, b
                 << "remove <key>       - delete a key\n"
                 << "exit               - quit\n";
     });
-    
+
     dispatcher.register_command("put", [&](const std::vector<std::string>& args) {
         kv_store.put(args[0], args[1]);
         std::cout << "OK\n";
@@ -28,6 +28,10 @@ void register_commands(CommandDispatcher& dispatcher, KeyValueStore& kv_store, b
         if (kv_store.remove(args[0]))
         {
             std::cout << "REMOVED\n";
+        }
+        else
+        {
+            std::cout << "NO ITEM\n";
         }
     });
 

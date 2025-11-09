@@ -10,25 +10,19 @@ class KeyValueStore
 {
 public:
     KeyValueStore() = default;
-    explicit KeyValueStore(const std::string& wal_filename);
 
     // Basic KV operations
     void put(const std::string& key, const std::string& value);
     std::optional<std::string> get(const std::string& key) const;
     bool remove(const std::string& key);
 
-    // Persistence API
-    bool save_to_file(const std::string& filename) const;
-    bool load_from_file(const std::string& filename);
-
-private:
-    // Write-Ahead Log (WAL) persistence
-    void append_wal(const std::string& entry);
+    // Snapshot helpers
+    const std::unordered_map<std::string, std::string>& data() const { return m_store; }
+    void load_data(std::unordered_map<std::string, std::string>&& data);
 
 private:
     mutable std::shared_mutex m_mutex;
     std::unordered_map<std::string, std::string> m_store;
-    std::string m_wal_filename;
 };
 
 #endif // IMEMDB_KV_STORE_H
