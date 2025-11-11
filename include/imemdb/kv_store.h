@@ -17,12 +17,12 @@ public:
     bool remove(const std::string& key);
 
     // Snapshot helpers
-    const std::unordered_map<std::string, std::string>& data() const { return m_store; }
+    const std::unordered_map<std::string, std::string>& data() const;
     void load_data(std::unordered_map<std::string, std::string>&& data);
 
 private:
-    mutable std::shared_mutex m_mutex;
-    std::unordered_map<std::string, std::string> m_store;
+    mutable std::shared_mutex mutex_;
+    std::unordered_map<std::string, std::string> store_;
 };
 
 #endif // IMEMDB_KV_STORE_H
